@@ -15,7 +15,7 @@ const initialState = {
 
 // * Register user
 export const register = createAsyncThunk(
-    'auth/register',
+    'register_user',
     async (user, thunkAPI) => {
         try {
             return await authService.register(user)
@@ -32,7 +32,7 @@ export const register = createAsyncThunk(
 )
 
 // * Login user
-export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
+export const login = createAsyncThunk('login_user', async (user, thunkAPI) => {
     try {
         return await authService.login(user)
     } catch (error) {
@@ -44,7 +44,7 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     }
 })
 
-export const logout = createAsyncThunk('auth/logout', async () => {
+export const logout = createAsyncThunk('logout_user', async () => {
     await authService.logout()
 })
 
@@ -68,12 +68,12 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload.response
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
-                state.message = action.payload
+                state.message = action.payload.message
                 state.user = null
             })
             // * Login Builders 
@@ -83,12 +83,12 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload.response
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
-                state.message = action.payload
+                state.message = "Wrong Credentials"
                 state.user = null
             })
             // * Logout Builders 

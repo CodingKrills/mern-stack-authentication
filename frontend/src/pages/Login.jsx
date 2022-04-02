@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { login, reset } from '../redux/features/authSlice'
+import LoadingComponent from '../components/LoadingComponent'
 
 const Login = () => {
 
   // * use State 
+  const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -10,6 +15,25 @@ const Login = () => {
 
   const { email, password } = formData;
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
+
+  useEffect(() => {
+    if (isError) {
+      // alert(isError)
+      setShowAlert(true)
+    }
+
+    if (isSuccess || user) {
+      navigate('/')
+    }
+
+    dispatch(reset())
+  }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -19,12 +43,19 @@ const Login = () => {
   }
 
   const onSubmit = (e) => {
+    e.preventDefault()
 
-    e.preventDefault();
+    const userData = {
+      email,
+      password,
+    }
 
+    dispatch(login(userData))
   }
 
-  console.log(formData)
+  if (isLoading) {
+    return <LoadingComponent />
+  }
 
   return (
     <>
@@ -57,8 +88,17 @@ const Login = () => {
                   <button type='submit' className='btn btn-block btn-md btn-primary'>Log In</button>
                 </div>
               </form>
-
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <p className="card-text"></p>
+              {showAlert ?
+                <>
+                  <div className="alert alert-danger">
+                    {message}
+                  </div>
+                </>
+                :
+                <>
+                </>
+              }
             </div>
           </div>
         </div>
