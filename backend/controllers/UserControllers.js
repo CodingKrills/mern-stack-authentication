@@ -119,7 +119,7 @@ const loginUser = asyncHandler(async (req, res) => {
     let message = required.map((item) => {
       return " " + item;
     });
-    res.json({
+    res.status(400).json({
       status: "fail",
       message: "Following fields are required - " + message,
       response: [],

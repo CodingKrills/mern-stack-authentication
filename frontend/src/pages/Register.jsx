@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { register, reset } from '../redux/features/authSlice'
 import LoadingComponent from '../components/LoadingComponent'
 
@@ -13,6 +13,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const [inputValid, setInputValid] = useState('');
 
   const { name, email, password, confirmPassword } = formData;
 
@@ -26,6 +27,7 @@ const Register = () => {
   useEffect(() => {
     if (isError) {
       alert(message)
+      setInputValid('is-invalid')
     }
 
     if (isSuccess || user) {
@@ -76,7 +78,7 @@ const Register = () => {
                 <div className='form-group'>
                   <div className="mb-3">
                     <label className="form-label">Your Name</label>
-                    <input type="text" className="form-control" placeholder='You Full Name ...'
+                    <input type="text" className={`form-control ${inputValid}`} placeholder='You Full Name ...'
                       name='name'
                       value={name}
                       onChange={onChange}
@@ -84,7 +86,7 @@ const Register = () => {
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Email address</label>
-                    <input type="email" className="form-control" placeholder='Your Email Address ...'
+                    <input type="email" className={`form-control ${inputValid}`} placeholder='Your Email Address ...'
                       name='email'
                       value={email}
                       onChange={onChange}
@@ -92,7 +94,7 @@ const Register = () => {
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Your password</label>
-                    <input type="password" className="form-control" placeholder='Your Password ...'
+                    <input type="password" className={`form-control ${inputValid}`} placeholder='Your Password ...'
                       name='password'
                       value={password}
                       onChange={onChange}
@@ -100,7 +102,7 @@ const Register = () => {
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Confirm password</label>
-                    <input type="password" className="form-control" placeholder='Confirm Password ...'
+                    <input type="password" className={`form-control ${inputValid}`} placeholder='Confirm Password ...'
                       name='confirmPassword'
                       value={confirmPassword}
                       onChange={onChange}
@@ -108,11 +110,14 @@ const Register = () => {
                   </div>
                 </div>
                 <div className='form-group'>
-                  <button type='submit' className='btn btn-block btn-md btn-primary'>REGISTER</button>
+                  <button type="submit" class="btn btn-block btn-outline-dark active btn-animated btn-animated-x" style={{ borderRadius: "0" }}>
+                    <span class="btn-inner--visible">Register</span>
+                    <span class="btn-inner--hidden"><i class="fas fa-arrow-right"></i></span>
+                  </button>
                 </div>
+                <p>Already An User ? <Link to='/login'> Login Now</Link></p>
               </form>
 
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
           </div>
         </div>
