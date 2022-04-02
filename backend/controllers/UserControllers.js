@@ -1,11 +1,13 @@
+import asyncHandler from 'express-async-handler'
 import UserModel from "../models/UserModel.js";
+import generateToken from '../configs/jwt/generateToken.js'
 
 // * ========================================================= //
 
 // * @desc    Register a new user
 // * @route   POST /api/register_user
 // * @access  Public
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
   const userExists = await UserModel.findOne({ email });
@@ -16,7 +18,7 @@ const registerUser = async (req, res) => {
   }
 
   const user = await UserModel.create({
-    name,
+    full_name: name,
     email,
     password,
   });
@@ -33,10 +35,34 @@ const registerUser = async (req, res) => {
     res.status(400);
     throw new Error("Invalid user data");
   }
-};
+});
 
 // * ========================================================= //
 
-export { registerUser };
+// * @desc    Register a new user
+// * @route   POST /api/register_user
+// * @access  Public
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body
+
+  // * Check for user email
+  const user = await UserModel.findOne({ email })
+
+  if (user && password === user.password) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    })
+  } else {
+    res.status(400)
+    throw new Error('Invalid credentials')
+  }
+});
+
+// * ========================================================= //
+
+export { registerUser, loginUser };
 
 // * ========================================================= //

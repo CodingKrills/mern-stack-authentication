@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { register, reset } from '../redux/features/authSlice'
+import LoadingComponent from '../components/LoadingComponent'
 
 const Register = () => {
 
@@ -12,6 +16,24 @@ const Register = () => {
 
   const { name, email, password, confirmPassword } = formData;
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
+
+  useEffect(() => {
+    if (isError) {
+      alert(message)
+    }
+
+    if (isSuccess || user) {
+      navigate('/')
+    }
+
+    dispatch(reset())
+  }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -24,9 +46,23 @@ const Register = () => {
 
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      alert('Passwords do not match')
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      }
+
+      dispatch(register(userData))
+    }
+
   }
 
-  console.log(formData)
+  if (isLoading) {
+    return <LoadingComponent />
+  }
 
   return (
     <>

@@ -10,27 +10,20 @@ const userSchema = mongoose.Schema(
       required: true,
     },
 
-    // * last name 
-
-    last_name: {
-      type: String,
-      required: true,
-    },
-
     // * phone 
 
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    // phone: {
+    //   type: String,
+    //   required: true,
+    //   unique: true,
+    // },
 
     // * email
 
     email: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
 
     // * password
@@ -42,23 +35,24 @@ const userSchema = mongoose.Schema(
 
     // * user_id
 
-    user_id: {
-      type: String,
-      unique: true,
-    },
+    // user_id: {
+    //   type: String,
+    //   unique: true,
+    // },
 
     // * gender
 
-    gender: {
-      type: String,
-      required: true,
-    },
+    // gender: {
+    //   type: String,
+    //   required: true,
+    // },
 
     // * is_active
 
     is_active: {
       type: String,
-      required: true,
+      // required: true,
+      default: true
     },
   },
   { timestamps: true })
